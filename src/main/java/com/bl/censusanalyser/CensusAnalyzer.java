@@ -8,28 +8,23 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
-
+import java.util.stream.StreamSupport;
 public class CensusAnalyzer {
 
-    public int loadIndiaCensusData(String csvFilePath) {
-        Reader reader = null;
-        try {
-            reader = Files.newBufferedReader(Paths.get(csvFilePath));
-            CsvToBean<IndiaCensusCSV> csvToBean = new CsvToBeanBuilder<IndiaCensusCSV>(reader)
+    public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+            CsvToBean<IndiaCensusCSV>csvToBean = new CsvToBeanBuilder<IndiaCensusCSV>(reader)
                     .withType(IndiaCensusCSV.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
-            Iterator<IndiaCensusCSV> iterator = csvToBean.iterator();
-            int numOfEntries = 0;
-            while (iterator.hasNext()) {
-                numOfEntries++;
-                iterator.next();
-            }
-            return numOfEntries;
-        } catch (
-                IOException e) {
-            System.out.println(e);
+            Iterator<IndiaCensusCSV>iterator = csvToBean.iterator();
+            Iterable<IndiaCensusCSV> csvIterable = () -> iterator;
+            int count = (int) StreamSupport.stream(csvIterable.spliterator(), true).count();
+            return count;
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_INCORRECT);
         }
-        return 0;
+
     }
+
 }
