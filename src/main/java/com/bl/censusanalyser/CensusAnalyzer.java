@@ -12,7 +12,11 @@ import java.util.stream.StreamSupport;
 public class CensusAnalyzer {
 
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
-        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+        try {
+            if (csvFilePath.contains("txt")) {
+                throw new CensusAnalyserException("Wrong file type...File should be in CSV Format", CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_FILE_FORMAT);
+            }
+            Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             CsvToBean<IndiaCensusCSV>csvToBean = new CsvToBeanBuilder<IndiaCensusCSV>(reader)
                     .withType(IndiaCensusCSV.class)
                     .withIgnoreLeadingWhiteSpace(true)
