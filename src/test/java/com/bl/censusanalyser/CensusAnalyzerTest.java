@@ -12,6 +12,7 @@ public class CensusAnalyzerTest {
     private String INDIA_STATE_CSV_FILE_PATH = "./src/main/resources/IndiaStateCode.csv";
     private String INIDAN_CENSUS_WrongCSV_FILE_PATH = "./src/main/resources/IndiaStateCensusData.csv";
     private String INIDAN_CENSUS_WrongCSV_FILE_FORMAT = "./src/main/resources/IndiaStateCode.txt";
+    String delimeter = "";
 
     @Test
     public void givenIndianCensusCSVFIle_WhenLoad_ShouldReturnCorrectRecords() throws CensusAnalyserException {
@@ -32,15 +33,29 @@ public class CensusAnalyzerTest {
             e.printStackTrace();
         }
     }
-        @Test
-        public void givenIndianCensusWrongCSVFormat_ShouldReturnException() {
-            try {
-                CensusAnalyzer censusAnalyser = new CensusAnalyzer();
-                ExpectedException exceptionRule = ExpectedException.none();
-                exceptionRule.expect(CensusAnalyserException.class);
-                censusAnalyser.loadIndiaCensusData(INIDAN_CENSUS_WrongCSV_FILE_FORMAT);
-            } catch (CensusAnalyserException e) {
-               Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_FILE_FORMAT);
-            }
+
+    @Test
+    public void givenIndianCensusWrongCSVFormat_ShouldReturnException() {
+        try {
+            CensusAnalyzer censusAnalyser = new CensusAnalyzer();
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(CensusAnalyserException.class);
+            censusAnalyser.loadIndiaCensusData(INIDAN_CENSUS_WrongCSV_FILE_FORMAT);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_FILE_FORMAT);
+        }
+    }
+
+    @Test
+    public void givenStateCensusCSVFile_If_Delimeter_Incorrect_returnsCustomException() {
+        try {
+            CensusAnalyzer censusAnalyser = new CensusAnalyzer();
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(CensusAnalyserException.class);
+            censusAnalyser.readDelimeter(INDIA_CENSUS_CSV_FILE_PATH,delimeter);
+        }
+        catch (CensusAnalyserException e) {
+            Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_FILE_FORMAT);
+        }
     }
 }
