@@ -2,11 +2,6 @@ package com.bl.censusanalyser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.bl.censusanalyser.CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_FILE_FORMAT;
 
 public class CensusAnalyzerTest {
 
