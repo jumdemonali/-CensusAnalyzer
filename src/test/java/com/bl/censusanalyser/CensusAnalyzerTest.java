@@ -10,6 +10,7 @@ public class CensusAnalyzerTest {
     private String INIDAN_CENSUS_WrongCSV_FILE_PATH = "./src/main/resources/IndiaStateCensusData.csv";
     private String INIDAN_CENSUS_WrongCSV_FILE_FORMAT = "./src/main/resources/IndiaStateCode.txt";
     private String CENSUS_INCORRECT_DELIMITER = ".src/main/resources/StateCensusIncorrectDelimiter.csv";
+    private String CENSUS_INCORRECT_HEADER = ".src/main/resources/CensusWithWrongHeader.csv";
 
     @Test
     public void givenIndianCensusCSVFIle_WhenLoad_ShouldReturnCorrectRecords() throws CensusAnalyserException {
@@ -41,6 +42,7 @@ public class CensusAnalyzerTest {
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_FILE_FORMAT);
         }
+
     }
 
     @Test
@@ -49,10 +51,21 @@ public class CensusAnalyzerTest {
             CensusAnalyzer censusAnalyser = new CensusAnalyzer();
             ExpectedException exceptionRule = ExpectedException.none();
             exceptionRule.expect(CensusAnalyserException.class);
-            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            censusAnalyser.loadIndiaCensusData(CENSUS_INCORRECT_DELIMITER);
         } catch (CensusAnalyserException a) {
-            Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_DELIMITER,a.type);
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.RUNTIME_EXCEPTION, a.type);
         }
     }
 
+    @Test
+    public void givenIndianCensusCSVFile_WhenIncorrectHeader_ReturnCustomException() {
+        try {
+            CensusAnalyzer censusAnalyser = new CensusAnalyzer();
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(CensusAnalyserException.class);
+            censusAnalyser.loadIndiaCensusData(CENSUS_INCORRECT_HEADER);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals( e.type,CensusAnalyserException.ExceptionType.RUNTIME_EXCEPTION);
+        }
+    }
 }

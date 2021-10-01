@@ -3,14 +3,12 @@ package com.bl.censusanalyser;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import java.io.*;
-import java.util.List;
+import java.io.IOException;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import java.util.Scanner;
 import java.util.stream.StreamSupport;
-import java.util.regex.Pattern;
 public class CensusAnalyzer {
 
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
@@ -27,11 +25,11 @@ public class CensusAnalyzer {
             Iterable<IndiaCensusCSV> csvIterable = () -> iterator;
             int count = (int) StreamSupport.stream(csvIterable.spliterator(), true).count();
             return count;
-        }
-        catch (RuntimeException e) {
-            throw new CensusAnalyserException("File should have comma as delimiter", CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_DELIMITER);
-        } catch (IOException a) {
-            throw new CensusAnalyserException(a.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_INCORRECT);
+        } catch (RuntimeException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.RUNTIME_EXCEPTION);
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_INCORRECT);
         }
     }
+
 }
