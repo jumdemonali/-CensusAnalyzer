@@ -31,5 +31,15 @@ public class CensusAnalyzer {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_INCORRECT);
         }
     }
-
+    public int loadIndianStateCodeData(String csvFilePath) throws IOException {
+        Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
+        CsvToBean<IndiaStateCodeCsv> csvToBean = new CsvToBeanBuilder<IndiaStateCodeCsv>(reader)
+                .withType(IndiaStateCodeCsv.class)
+                .withIgnoreLeadingWhiteSpace(true)
+                .build();
+        Iterator<IndiaStateCodeCsv> iterator = csvToBean.iterator();
+        Iterable<IndiaStateCodeCsv> csvIterable = () -> iterator;
+        int count = (int) StreamSupport.stream(csvIterable.spliterator(), true).count();
+        return count;
+    }
 }
